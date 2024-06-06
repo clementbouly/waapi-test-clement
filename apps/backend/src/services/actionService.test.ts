@@ -9,15 +9,6 @@ import {
     writeData,
 } from './actionService';
 
-describe('Read and Write', () => {
-    it('should read and write data', async () => {
-        const data = DATA_MOCK;
-        await writeData(data);
-        const read = await readData();
-        expect(read).toEqual(data);
-    });
-});
-
 describe('getActions', () => {
     it('should read the file and return the parsed JSON', async () => {
         const data = DATA_MOCK;

@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import fs from 'fs/promises';
 import {
     emitActionTypes,
@@ -8,8 +9,8 @@ import { ActionType, ActionsData, UserAction } from '../models/actions';
 import { getActionsTypeFromUserActions, getDataPath } from '../utils/utils';
 
 const DATA_PATH = getDataPath();
-const QUEUE_INTERVAL_SECONDS = 5;
-const CREDITS_REGENERATION_INTERVAL_SECONDS = 60;
+const QUEUE_INTERVAL_SECONDS = 15;
+const CREDITS_REGENERATION_INTERVAL_MINUTES = 10;
 let timer = new Date();
 
 export const readData = async (): Promise<ActionsData> => {
@@ -38,9 +39,13 @@ export const writeData = async (data: ActionsData): Promise<void> => {
 
 export const getActions = async (): Promise<ActionType[]> => {
     try {
-        const data = await fs.readFile(DATA_PATH, { encoding: 'utf-8' });
-        const json = JSON.parse(data);
-        return json.actionTypes;
+        const data = await fs.readFile(DATA_PATH, 'utf8');
+        // check if jsonData has a valid JSON format
+        if (data.trim()) {
+            const json = JSON.parse(data);
+            return json.actionTypes;
+        }
+        return [];
     } catch (error) {
         console.error('Failed to read or parse actions:', error);
         throw error;
@@ -53,22 +58,14 @@ export const enqueueAction = async (
 ): Promise<UserAction> => {
     const data = await readData();
     return new Promise((resolve, _) => {
-        const randomId = Math.floor(Math.random() * 10000);
+        const uuid = crypto.randomUUID();
 
         const newAction = {
-            id: randomId.toString(),
+            id: uuid.toString(),
             actionTypeId: actionTypeId,
             scheduledExecution: new Date().toISOString(),
             executed: false,
         };
-
-        // Decrement the currentCredits of the actionType
-        data.actionTypes.forEach((actionType) => {
-            if (actionType.id === actionTypeId) {
-                if (actionType.currentCredits === 0) return;
-                actionType.currentCredits -= 1;
-            }
-        });
 
         data.userActions.push(newAction);
         writeData(data);
@@ -111,6 +108,9 @@ export const processQueue = async () => {
                 (action) => action.id !== actionToExecute.id
             );
 
+            // Decrement the currentCredits of the actionType
+            actionType.currentCredits -= 1;
+
             writeData(data);
 
             // Emit the updated queue and actionTypes
@@ -130,7 +130,7 @@ export const processQueue = async () => {
 
 setInterval(processQueue, QUEUE_INTERVAL_SECONDS * 1000);
 
-// Emit the remaining time for the next queue processing
+// Emit the remaining time in secondes for the next queue processing
 const emitRemainingTime = async () => {
     const now = new Date();
 
@@ -163,4 +163,7 @@ export const regenerateCredits = async () => {
     writeData(data);
 };
 
-setInterval(regenerateCredits, CREDITS_REGENERATION_INTERVAL_SECONDS * 1000);
+setInterval(
+    regenerateCredits,
+    CREDITS_REGENERATION_INTERVAL_MINUTES * 60 * 1000
+);

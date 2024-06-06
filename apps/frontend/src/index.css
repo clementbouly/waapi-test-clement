@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Poppins, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -8,6 +8,38 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
+  background-color: #d8efff;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.2rem;
+  background: white;
+  /* shadow */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+p {
+  color: #45b2e8;
+  display: inline;
+}
+
+i {
+  color: #2ca8a8;
+  font-style: normal;
+  font-weight: 800;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
 }

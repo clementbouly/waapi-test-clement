@@ -5,17 +5,23 @@ import { ListContainer } from './actionsList.component';
 
 export const AnimatedLi = styled(motion.li)`
   font-size: 18px;
-  padding: 10px;
+  padding: 1rem;
   cursor: pointer;
-  margin: 5px 0;
-  background-color: #f0f0f0;
+  margin: 0.5rem 0;
+  background-color: #fbfeff;
   border-radius: 5px;
   transition: background-color 0.3s;
   list-style: none;
+  font-weight: bold;
+  box-shadow: 0px 0px 5px 0px #0000002e;
 
   &:hover {
-    background-color: #e2e2e2;
+    background-color: #fbfeffb5;
   }
+`;
+
+const StyledUl = styled.ul`
+  width: 20rem;
 `;
 
 type ActionListProps = {
@@ -26,8 +32,14 @@ type ActionListProps = {
 export const QueueList = ({ queue, queueTimer }: ActionListProps) => {
   return (
     <ListContainer>
-      <h1>File d'attente - ({queueTimer})</h1>
-      <ul>
+      <h2>
+        File d'attente -{' '}
+        <span role="img" aria-label="time">
+          ⏳
+        </span>
+        {queueTimer}s
+      </h2>
+      <StyledUl>
         <AnimatePresence>
           {queue.map((action) => (
             <AnimatedLi
@@ -41,7 +53,7 @@ export const QueueList = ({ queue, queueTimer }: ActionListProps) => {
             </AnimatedLi>
           ))}
         </AnimatePresence>
-      </ul>
+      </StyledUl>
     </ListContainer>
   );
 };

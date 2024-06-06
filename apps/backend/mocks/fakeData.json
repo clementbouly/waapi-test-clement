@@ -4,19 +4,19 @@
       "id": "1",
       "name": "faire les courses",
       "maxCredits": 10,
-      "currentCredits": 9
+      "currentCredits": 10
     },
     {
       "id": "2",
       "name": "manger des pommes",
       "maxCredits": 5,
-      "currentCredits": 4
+      "currentCredits": 5
     },
     {
       "id": "3",
       "name": "manger",
       "maxCredits": 5,
-      "currentCredits": 4
+      "currentCredits": 5
     }
   ],
   "userActions": [

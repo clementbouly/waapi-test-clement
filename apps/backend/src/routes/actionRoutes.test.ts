@@ -3,23 +3,24 @@ import request from 'supertest';
 import app from '../app';
 import { getDataPath } from '../utils/utils';
 
-const cleanUserActions = async () => {
+export const resetDatabase = async () => {
     const filePath = getDataPath();
     const data = await fs.readFile(filePath, 'utf8');
-    const jsonData = JSON.parse(data);
-    jsonData.userActions = jsonData.userActions.slice(0, 2);
-    jsonData.actionTypes = jsonData.actionTypes.map((actionType) => {
-        actionType.currentCredits = actionType.maxCredits;
-        return actionType;
-    });
+    if (data.trim()) {
+        const jsonData = JSON.parse(data);
+        jsonData.userActions = jsonData.userActions.slice(0, 2);
+        jsonData.actionTypes = jsonData.actionTypes.map((actionType) => {
+            actionType.currentCredits = actionType.maxCredits;
+            return actionType;
+        });
 
-    await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8');
-
+        await fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8');
+    }
 };
 
 describe('POST /api/actions/add', () => {
     afterEach(async () => {
-        await cleanUserActions();
+        await resetDatabase();
     });
     it('should handle the request to add an action', async () => {
         const response = await request(app)

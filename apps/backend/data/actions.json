@@ -2,65 +2,52 @@
   "actionTypes": [
     {
       "id": "1",
-      "name": "faire les courses",
-      "maxCredits": 10,
-      "currentCredits": 7
+      "name": "voyager",
+      "maxCredits": 4,
+      "currentCredits": 1
     },
     {
       "id": "2",
-      "name": "manger des pommes",
-      "maxCredits": 5,
-      "currentCredits": 2
+      "name": "chill",
+      "maxCredits": 8,
+      "currentCredits": 6
     },
     {
       "id": "3",
       "name": "manger",
-      "maxCredits": 5,
-      "currentCredits": 3
+      "maxCredits": 30,
+      "currentCredits": 25
     },
     {
       "id": "4",
       "name": "dormir",
-      "maxCredits": 5,
-      "currentCredits": 4
+      "maxCredits": 40,
+      "currentCredits": 32
     },
     {
       "id": "5",
       "name": "faire du sport",
-      "maxCredits": 5,
-      "currentCredits": 4
+      "maxCredits": 15,
+      "currentCredits": 14
     },
     {
       "id": "6",
       "name": "lire",
-      "maxCredits": 5,
-      "currentCredits": 4
-    },
-    {
-      "id": "7",
-      "name": "regarder la télé",
-      "maxCredits": 5,
-      "currentCredits": 4
+      "maxCredits": 4,
+      "currentCredits": 3
     },
     {
       "id": "8",
       "name": "jouer à des jeux vidéo",
-      "maxCredits": 5,
-      "currentCredits": 3
+      "maxCredits": 50,
+      "currentCredits": 40
     },
     {
       "id": "9",
       "name": "écouter de la musique",
-      "maxCredits": 5,
-      "currentCredits": 2
+      "maxCredits": 20,
+      "currentCredits": 16
     }
   ],
-  "userActions": [
-    {
-      "id": "6268",
-      "actionTypeId": "8",
-      "scheduledExecution": "2024-06-06T15:31:48.284Z",
-      "executed": false
-    }
-  ]
+  "userActions": []
 }
