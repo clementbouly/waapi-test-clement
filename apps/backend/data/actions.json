@@ -1,0 +1,23 @@
+{
+  "actionTypes": [
+    {
+      "id": "1",
+      "name": "faire les courses",
+      "maxCredits": 10,
+      "currentCredits": 8
+    },
+    {
+      "id": "2",
+      "name": "manger des pommes",
+      "maxCredits": 5,
+      "currentCredits": 4
+    },
+    {
+      "id": "3",
+      "name": "manger",
+      "maxCredits": 5,
+      "currentCredits": 4
+    }
+  ],
+  "userActions": []
+}

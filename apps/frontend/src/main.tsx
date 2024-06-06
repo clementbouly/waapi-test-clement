@@ -1,16 +1,16 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import styled from 'styled-components';
+import { App } from './App';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') ?? document.body
 );
 
 // @INFO: styled-components is installed, you can use it if you want ;)
-const Container = styled.div``;
+// const Container = styled.div``;
 
 root.render(
   <StrictMode>
-    <Container>Good luck !</Container>
+    <App />
   </StrictMode>
 );
