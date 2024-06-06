@@ -3,6 +3,7 @@ export interface ActionType {
     name: string;
     maxCredits: number;
     currentCredits: number;
+    userActionId?: string;
 }
 
 export interface UserAction {

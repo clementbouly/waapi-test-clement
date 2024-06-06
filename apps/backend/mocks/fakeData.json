@@ -1,0 +1,36 @@
+{
+  "actionTypes": [
+    {
+      "id": "1",
+      "name": "faire les courses",
+      "maxCredits": 10,
+      "currentCredits": 9
+    },
+    {
+      "id": "2",
+      "name": "manger des pommes",
+      "maxCredits": 5,
+      "currentCredits": 4
+    },
+    {
+      "id": "3",
+      "name": "manger",
+      "maxCredits": 5,
+      "currentCredits": 4
+    }
+  ],
+  "userActions": [
+    {
+      "id": "970",
+      "actionTypeId": "1",
+      "scheduledExecution": "2024-06-06T09:43:15.769Z",
+      "executed": false
+    },
+    {
+      "id": "153",
+      "actionTypeId": "2",
+      "scheduledExecution": "2024-06-06T09:43:31.577Z",
+      "executed": false
+    }
+  ]
+}

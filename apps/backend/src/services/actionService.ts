@@ -1,21 +1,32 @@
 import fs from 'fs/promises';
-import { emitActionTypes, emitQueue } from '../manager/socketManager';
+import {
+    emitActionTypes,
+    emitQueue,
+    emitQueueTimer,
+} from '../manager/socketManager';
 import { ActionType, ActionsData, UserAction } from '../models/actions';
-import { getActionsTypeFromUserActions } from '../utils/utils';
+import { getActionsTypeFromUserActions, getDataPath } from '../utils/utils';
 
-const DATA_PATH = 'apps/backend/data/actions.json';
+const DATA_PATH = getDataPath();
+const QUEUE_INTERVAL_SECONDS = 5;
+const CREDITS_REGENERATION_INTERVAL_SECONDS = 60;
+let timer = new Date();
 
 export const readData = async (): Promise<ActionsData> => {
     try {
         const jsonData = await fs.readFile(DATA_PATH, 'utf8');
-        return JSON.parse(jsonData);
+        // check if jsonData has a valid JSON format
+        if (jsonData.trim()) {
+            return JSON.parse(jsonData);
+        }
+        return { actionTypes: [], userActions: [] };
     } catch (error) {
         console.error('Failed to read data:', error);
         throw error;
     }
 };
 
-const writeData = async (data: ActionsData): Promise<void> => {
+export const writeData = async (data: ActionsData): Promise<void> => {
     try {
         const jsonData = JSON.stringify(data, null, 2);
         await fs.writeFile(DATA_PATH, jsonData, 'utf8');
@@ -42,7 +53,7 @@ export const enqueueAction = async (
 ): Promise<UserAction> => {
     const data = await readData();
     return new Promise((resolve, _) => {
-        const randomId = Math.floor(Math.random() * 1000);
+        const randomId = Math.floor(Math.random() * 10000);
 
         const newAction = {
             id: randomId.toString(),
@@ -73,6 +84,7 @@ export const enqueueAction = async (
 export const processQueue = async () => {
     const data = await readData();
     const now = new Date();
+    timer = now;
 
     const actionToExecute = data.userActions.find((action) => {
         const actionType = data.actionTypes.find(
@@ -116,11 +128,23 @@ export const processQueue = async () => {
     }
 };
 
-// Check the queue every 5 seconds
-setInterval(processQueue, 3000);
+setInterval(processQueue, QUEUE_INTERVAL_SECONDS * 1000);
+
+// Emit the remaining time for the next queue processing
+const emitRemainingTime = async () => {
+    const now = new Date();
+
+    const remainingTimeInSeconds = Math.floor(
+        (now.getTime() - timer.getTime()) / 1000
+    );
+
+    emitQueueTimer(QUEUE_INTERVAL_SECONDS - remainingTimeInSeconds);
+};
+
+setInterval(emitRemainingTime, 1000);
 
 // Regenerate credits for all actionTypes
-const regenerateCredits = async () => {
+export const regenerateCredits = async () => {
     const data = await readData();
 
     data.actionTypes.forEach((actionType) => {
@@ -133,10 +157,10 @@ const regenerateCredits = async () => {
             regeneratedCredits
         );
     });
+    emitActionTypes(data.actionTypes);
 
     console.log('Credits regenerated');
     writeData(data);
 };
 
-// Regenerate credits every 100 seconds
-setInterval(regenerateCredits, 100000);
+setInterval(regenerateCredits, CREDITS_REGENERATION_INTERVAL_SECONDS * 1000);

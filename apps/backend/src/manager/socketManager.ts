@@ -12,3 +12,7 @@ export function emitQueue(queue: ActionType[]) {
 export function emitError(error: string) {
     io.emit('error', error);
 }
+
+export function emitQueueTimer(time: number) {
+    io.emit('queueTimer', time);
+}

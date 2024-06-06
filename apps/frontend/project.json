@@ -5,7 +5,7 @@
   "projectType": "application",
   "tags": [],
   "targets": {
-    "serve": {
+    "start": {
       "executor": "nx:run-commands",
       "options": {
         "command": "npm run serve",

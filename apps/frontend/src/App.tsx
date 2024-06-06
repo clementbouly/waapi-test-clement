@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import styled from 'styled-components';
+import styles from './App.module.css';
+import { ActionList } from './components/actionsList.component';
+import { QueueList } from './components/queueList.component';
 import { ActionType } from './models/actions';
 
 const socket = io('http://localhost:3000');
 
-const StyledLi = styled.li`
+export const StyledLi = styled.li`
   font-size: 18px;
   padding: 10px;
   cursor: pointer;
@@ -13,6 +16,7 @@ const StyledLi = styled.li`
   background-color: #f0f0f0;
   border-radius: 5px;
   transition: background-color 0.3s;
+  list-style-type: none;
 
   &:hover {
     background-color: #e2e2e2;
@@ -22,6 +26,7 @@ const StyledLi = styled.li`
 export const App = () => {
   const [actions, setActions] = useState<ActionType[]>([]);
   const [queue, setQueue] = useState<ActionType[]>([]);
+  const [queueTimer, setQueueTimer] = useState<number | null>(null);
 
   useEffect(() => {
     // get all actions and queue on mount
@@ -34,6 +39,10 @@ export const App = () => {
 
     socket.on('getQueue', (updatedQueue) => {
       setQueue(updatedQueue);
+    });
+
+    socket.on('queueTimer', (time) => {
+      setQueueTimer(time);
     });
 
     return () => {
@@ -59,25 +68,9 @@ export const App = () => {
   }
 
   return (
-    <>
-      <h1>Actions possibles !</h1>
-      <ul>
-        {actions.map((action) => (
-          <StyledLi
-            key={action.id}
-            onClick={() => handleActionClick(action.id)}
-          >
-            {action.name} - {action.currentCredits} crédits restants
-          </StyledLi>
-        ))}
-      </ul>
-
-      <h1>File d'attente</h1>
-      <ul>
-        {queue.map((action) => (
-          <StyledLi key={action.id + Math.random()}>{action.name}</StyledLi>
-        ))}
-      </ul>
-    </>
+    <div className={styles.container}>
+      <ActionList actions={actions} handleClick={handleActionClick} />
+      <QueueList queue={queue} queueTimer={queueTimer} />
+    </div>
   );
 };

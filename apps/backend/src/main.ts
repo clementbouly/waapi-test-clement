@@ -1,10 +1,8 @@
-import cors from 'cors';
-import express from 'express';
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-
+import app from './app';
 import { getAllActions, getQueue } from './controllers/actionController';
-import actionRoutes from './routes/actionRoutes';
+import { isTestEnv } from './utils/utils';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -14,16 +12,10 @@ const corsOptions = {
   methods: ['GET', 'POST'],
 };
 
-const app = express();
 const httpServer = createServer(app);
 export const io = new SocketIOServer(httpServer, {
   cors: corsOptions,
 });
-
-// API configuration
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use('/api', actionRoutes);
 
 // Socket configuration
 io.on('connection', (socket) => {
@@ -42,6 +34,9 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(port, host, () => {
-  console.log(`Server running at http://${host}:${port}`);
-});
+// Check if the server is running in test mode to handle the error "Uncaught Error: listen EADDRINUSE: address already in use"
+if (!isTestEnv() || require.main === module) {
+  httpServer.listen(port, host, () => {
+    console.log(`Server running at http://${host}:${port}`);
+  });
+}
