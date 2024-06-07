@@ -9,8 +9,8 @@ import { ActionType, ActionsData, UserAction } from '../models/actions';
 import { getActionsTypeFromUserActions, getDataPath } from '../utils/utils';
 
 const DATA_PATH = getDataPath();
-const QUEUE_INTERVAL_SECONDS = 5;
-const CREDITS_REGENERATION_INTERVAL_MINUTES = 1;
+const QUEUE_INTERVAL_SECONDS = 15;
+const CREDITS_REGENERATION_INTERVAL_MINUTES = 10;
 let timer = new Date();
 
 export const readData = async (): Promise<ActionsData> => {
