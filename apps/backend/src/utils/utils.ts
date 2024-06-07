@@ -1,5 +1,6 @@
 import { ActionType, ActionsData } from '../models/actions';
 
+// Get the actions that are not executed yet
 export const getActionsTypeFromUserActions = (
     data: ActionsData
 ): ActionType[] => {
@@ -24,8 +25,11 @@ export const isTestEnv = (): boolean => {
     return process.env.NODE_ENV === 'test';
 };
 
+export const MOCK_DATA_PATH = 'apps/backend/mocks/fakeData.json';
+const DATA_PATH = 'apps/backend/data/actions.json';
+
 export const getDataPath = (): string => {
     return isTestEnv()
-        ? 'apps/backend/mocks/fakeData.json'
-        : 'apps/backend/data/actions.json';
+        ? MOCK_DATA_PATH
+        : DATA_PATH
 };

@@ -37,7 +37,7 @@ export const QueueList = ({ queue, queueTimer }: ActionListProps) => {
         <span role="img" aria-label="time">
           ⏳
         </span>
-        {queueTimer}s
+        {queueTimer ? `${queueTimer}s` : 'Calculating...'}
       </h2>
       <StyledUl>
         <AnimatePresence>

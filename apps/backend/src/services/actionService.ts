@@ -9,8 +9,8 @@ import { ActionType, ActionsData, UserAction } from '../models/actions';
 import { getActionsTypeFromUserActions, getDataPath } from '../utils/utils';
 
 const DATA_PATH = getDataPath();
-const QUEUE_INTERVAL_SECONDS = 15;
-const CREDITS_REGENERATION_INTERVAL_MINUTES = 10;
+const QUEUE_INTERVAL_SECONDS = 5;
+const CREDITS_REGENERATION_INTERVAL_MINUTES = 1;
 let timer = new Date();
 
 export const readData = async (): Promise<ActionsData> => {
@@ -83,10 +83,15 @@ export const processQueue = async () => {
     const now = new Date();
     timer = now;
 
-    const actionToExecute = data.userActions.find((action) => {
-        const actionType = data.actionTypes.find(
-            (type) => type.id === action.actionTypeId
-        );
+    // Map action types for quick lookup
+    const actionTypes = data.actionTypes.reduce((acc, type) => {
+        acc[type.id] = type;
+        return acc;
+    }, {});
+
+    // Iterate over userActions to find the first executable action
+    const index = data.userActions.findIndex((action) => {
+        const actionType = actionTypes[action.actionTypeId];
         return (
             new Date(action.scheduledExecution) <= now &&
             !action.executed &&
@@ -95,37 +100,33 @@ export const processQueue = async () => {
         );
     });
 
-    if (actionToExecute) {
-        const actionType = data.actionTypes.find(
-            (type) => type.id === actionToExecute.actionTypeId
-        );
-        if (actionType && actionType.currentCredits > 0) {
-            console.log(`Executing action: ${actionToExecute.id}`);
-            actionToExecute.executed = true;
-
-            // Delete the action from the queue
-            data.userActions = data.userActions.filter(
-                (action) => action.id !== actionToExecute.id
-            );
-
-            // Decrement the currentCredits of the actionType
-            actionType.currentCredits -= 1;
-
-            writeData(data);
-
-            // Emit the updated queue and actionTypes
-            emitActionTypes(data.actionTypes);
-            const queue = getActionsTypeFromUserActions(data);
-            emitQueue(queue);
-        } else {
-            console.log(
-                'Insufficient credits or action type not found:',
-                actionToExecute.id
-            );
-        }
+    if (index !== -1) {
+        const actionToExecute = data.userActions[index];
+        executeAction(actionToExecute, actionTypes);
+        // Remove the executed action from the queue
+        data.userActions.splice(index, 1);
+        await writeData(data);
+        emitUpdatedData(data);
     } else {
         console.log('No executable action found at this time.');
     }
+};
+
+const executeAction = (action, actionTypes) => {
+    const actionType = actionTypes[action.actionTypeId];
+    if (actionType && actionType.currentCredits > 0) {
+        console.log(`Executing action: ${action.id}`);
+        action.executed = true;
+        actionType.currentCredits -= 1;
+    } else {
+        console.log('Insufficient credits or action type not found:', action.id);
+    }
+};
+
+const emitUpdatedData = (data) => {
+    const queue = getActionsTypeFromUserActions(data);
+    emitActionTypes(data.actionTypes);
+    emitQueue(queue);
 };
 
 setInterval(processQueue, QUEUE_INTERVAL_SECONDS * 1000);

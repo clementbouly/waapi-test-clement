@@ -7,12 +7,12 @@ import { isTestEnv } from './utils/utils';
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
+
+const httpServer = createServer(app);
 const corsOptions = {
   origin: 'http://localhost:4200',
   methods: ['GET', 'POST'],
 };
-
-const httpServer = createServer(app);
 export const io = new SocketIOServer(httpServer, {
   cors: corsOptions,
 });

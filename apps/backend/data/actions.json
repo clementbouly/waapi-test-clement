@@ -4,31 +4,31 @@
       "id": "1",
       "name": "voyager",
       "maxCredits": 4,
-      "currentCredits": 1
+      "currentCredits": 3
     },
     {
       "id": "2",
       "name": "chill",
       "maxCredits": 8,
-      "currentCredits": 6
+      "currentCredits": 7
     },
     {
       "id": "3",
       "name": "manger",
       "maxCredits": 30,
-      "currentCredits": 25
+      "currentCredits": 28
     },
     {
       "id": "4",
       "name": "dormir",
       "maxCredits": 40,
-      "currentCredits": 32
+      "currentCredits": 34
     },
     {
       "id": "5",
       "name": "faire du sport",
       "maxCredits": 15,
-      "currentCredits": 14
+      "currentCredits": 13
     },
     {
       "id": "6",
@@ -40,13 +40,13 @@
       "id": "8",
       "name": "jouer à des jeux vidéo",
       "maxCredits": 50,
-      "currentCredits": 40
+      "currentCredits": 43
     },
     {
       "id": "9",
       "name": "écouter de la musique",
       "maxCredits": 20,
-      "currentCredits": 16
+      "currentCredits": 17
     }
   ],
   "userActions": []

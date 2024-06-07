@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ErrorMessage } from '../UI/Error';
 import { ActionType } from '../models/actions';
 
 export const ListContainer = styled.div`
@@ -19,8 +20,8 @@ export const StyledLi = styled.li`
   box-shadow: 0px 0px 5px 0px #0000002e;
 
   &:hover {
-    /* gradient blue and white */
-    background-color: #fbfeffb5;
+    transform: scale(1.02);
+    box-shadow: 0px 0px 5px 0px #0000005e;
   }
 `;
 
@@ -34,12 +35,20 @@ export const ActionList = ({ actions, handleClick }: ActionListProps) => {
     <ListContainer>
       <h2>Actions possibles</h2>
       <ul>
-        {actions.map((action) => (
-          <StyledLi key={action.id} onClick={() => handleClick(action.id)}>
-            <b>{action.name}</b> - <i>{action.currentCredits}</i> crédits
-            restants
-          </StyledLi>
-        ))}
+        {actions.length > 0 ? (
+          actions.map((action) => (
+            <StyledLi
+              role="button"
+              key={action.id}
+              onClick={() => handleClick(action.id)}
+            >
+              <b>{action.name}</b> - <i>{action.currentCredits}</i> crédits
+              restants
+            </StyledLi>
+          ))
+        ) : (
+          <ErrorMessage>Pas d'actions définies</ErrorMessage>
+        )}
       </ul>
     </ListContainer>
   );
