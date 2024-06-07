@@ -2,8 +2,8 @@ import cors from 'cors';
 import express from 'express';
 import actionRoutes from './routes/actionRoutes';
 
-const corsOptions = {
-    origin: 'http://localhost:4200',
+export const corsOptions = {
+    origin: ['http://localhost:4200', 'http://localhost:4201'],
     methods: ['GET', 'POST'],
 };
 

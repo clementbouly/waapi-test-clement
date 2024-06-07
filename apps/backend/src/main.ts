@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
-import app from './app';
+import app, { corsOptions } from './app';
 import { getAllActions, getQueue } from './controllers/actionController';
 import { isTestEnv } from './utils/utils';
 
@@ -9,10 +9,7 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 
 const httpServer = createServer(app);
-const corsOptions = {
-  origin: 'http://localhost:4200',
-  methods: ['GET', 'POST'],
-};
+
 export const io = new SocketIOServer(httpServer, {
   cors: corsOptions,
 });
